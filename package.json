@@ -1,15 +1,19 @@
 {
-  "name": "lab16",
+  "name": "web-service",
   "version": "1.0.0",
-  "description": "",
+  "description": "Project 2",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ande28em/Web-Service.git"
+  },
+  "author": "Eric and Brantley",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.17.1",
-    "mysql": "^2.18.1"
-  }
+  "bugs": {
+    "url": "https://github.com/ande28em/Web-Service/issues"
+  },
+  "homepage": "https://github.com/ande28em/Web-Service#readme"
 }
