@@ -11,7 +11,7 @@
      <pre>curl -v \
    --request DELETE \
    http://localhost:5000/guests/2</pre></li></ul>
-   1. PATCH /guests/:id updates the guest guests first and last name. [NOT YET IMPLEMENTED]<ul><li>
-     <pre>curl -v \
+1. PATCH /guests/:id updates the guest guests first and last name. [NOT YET IMPLEMENTED]<ul><li>
+    <pre>curl -v \
    --request PATCH \
    http://localhost:5000/guests/2</pre></li></ul>
