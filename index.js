@@ -77,14 +77,26 @@ service.post("/guests", (req, resp) => {
   });
 });
 
+function rowToObject(row) {
+  return {
+    // id: row.id,
+    firstName: row.firstname,
+    lastName: row.lastname
+  };
+}
+
 // GET /guests/:id that returns as JSON an object with the guests first and last name.
 service.get("/guests/:id", (req, resp) => {
-  // const query = `SELECT id, firstname, lastname FROM guest WHERE is_deleted = 0 AND firstname = ? AND lastname = ?`
-  // const params = [req.pararms.firstname, req.params.lastname];
+  const id_get = [parseInt(req.params.id)];
+  const sql = 'SELECT * FROM guest WHERE id = ?';
+  console.log(`Got:${id_get}`)
 
-
-
-  resp.json(guests[req.params.id]);
+  connection.query(sql, id_get, (error, rows) => {
+    resp.json({
+      ok: true,
+      guests: rows.map(rowToObject),
+    });
+  });
 });
 
 // DELETE /guests/id that removes a guest from
