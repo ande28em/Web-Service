@@ -127,10 +127,12 @@ service.delete("/guests/:id", (req, resp) => {
 // PATCH /guests that accepts a JSON body containing an id and that guest's 
 // new first and last name. It returns a JSON structure reporting the new info 
 // assigned to the guest.
-service.patch("/guests", (req, resp) => {
-  const { id, firstname, lastname } = req.body;
-  const updateQuery = 'UPDATE guests SET firstname = ?, lastname = ? WHERE id = ?';
-  const param = [firstname, lastname, id];
+service.patch("/guests/:id/:firstname/:lastname", (req, resp) => {
+  const id_update = [parseInt(req.params.id)];
+  const firstname_update = req.params.firstname;
+  const lastname_update = req.params.lastname;
+  const updateQuery = 'UPDATE guest SET firstname = ?, lastname = ? WHERE id = ?';
+  const param = [firstname_update, lastname_update, id_update];
   connection.query(updateQuery, param, (error, result) => {
     if(error){
       console.error(error);
@@ -138,9 +140,9 @@ service.patch("/guests", (req, resp) => {
       resp.json({
         ok: true,
         result: {
-          id: id,
-          firstname: firstname,
-          lastname: lastname,
+          id: id_update,
+          firstname: firstname_update,
+          lastname: lastname_update,
         }
       });
     }
