@@ -56,7 +56,7 @@ service.listen(port, () => {
 service.post("/guests", (req, resp) => {
 
   const { firstname, lastname } = req.body;
-  console.log(`u:${firstname} screen:${lastname}`)
+  console.log(`Added First:${firstname} Last:${lastname}`)
   const insertQuery = 'INSERT INTO guest(firstname, lastname) VALUES (?, ?)';
   const parameters = [firstname, lastname];
 
@@ -79,9 +79,8 @@ service.post("/guests", (req, resp) => {
 
 // GET /guests/:id that returns as JSON an object with the guests first and last name.
 service.get("/guests/:id", (req, resp) => {
-  const query = `SELECT id, firstname, lastname FROM guest WHERE is_deleted = 0 AND firstname = ? AND lastname = ?`
-  const params = [req.pararms.firstname, req.params.lastname];
-
+  // const query = `SELECT id, firstname, lastname FROM guest WHERE is_deleted = 0 AND firstname = ? AND lastname = ?`
+  // const params = [req.pararms.firstname, req.params.lastname];
 
 
 
@@ -95,6 +94,7 @@ service.delete("/guests/:id", (req, resp) => {
   const id_delete = [parseInt(req.params.id)];
 
   const sql = 'DELETE FROM guest WHERE id = ?';
+  console.log(`Deleted:${id}`)
 
   connection.query(sql, id_delete, (error, result) => {
     if (error) {
