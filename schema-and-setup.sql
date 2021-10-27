@@ -8,18 +8,10 @@ CREATE USER social_user@localhost IDENTIFIED WITH mysql_native_password BY 'soci
 GRANT ALL PRIVILEGES ON social.* TO social_user@localhost;
 
 use social;
-DROP TABLE IF EXISTS human;
+DROP TABLE IF EXISTS guest;
 
-CREATE TABLE human (
+CREATE TABLE guest (
   id SERIAL PRIMARY KEY,
-  username text,
-  screenname text
-);
-
-DROP TABLE IF EXISTS follow;
-
-CREATE TABLE follow (
-  id SERIAL PRIMARY KEY,
-  followee int,
-  follower int
+  firstname text,
+  lastname text
 );

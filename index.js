@@ -7,9 +7,11 @@ const WTF = 10; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refer
 const fs = require("fs");
 const mysql = require("mysql");
 
+// Parse credentials
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
 
+// Connect with database
 const connection = mysql.createConnection(credentials);
 connection.connect((error) => {
   if (error) {
@@ -18,9 +20,13 @@ connection.connect((error) => {
   }
 });
 
-// TODO: issue queries.
+// Cross origin requirement
+service.use((request, response, next) => {
+  response.set('Access-Control-Allow-Origin', '*');
+  next();
+});
 
-connection.end();
+// // TODO: issue queries.
 
 let humanNextId = 1;
 const humans = {
@@ -53,15 +59,27 @@ service.listen(port, () => {
 // human.
 service.post("/humans", (req, resp) => {
   const { username, screenname } = req.body;
-  humans[humanNextId] = {
-    id: humanNextId,
-    username: username,
-    screenname: screenname,
-  };
-  resp.json({
-    ok: true,
-    result: humans[humanNextId++],
+  console.log(`u:${username} screen:${screenname}`)
+  const insertQuery = 'INSERT INTO human(username, screenname) VALUES (?, ?)';
+  const parameters = [username, screenname];
+
+  connection.query(insertQuery, parameters, (error, result) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(result);
+      resp.json({
+        ok: true,
+        result: {
+          id: result.insertId,
+          username: username,
+          screenname: screenname,
+        }
+      });
+    }
   });
+
+
 });
 
 // GET /humans/:id that returns as JSON an object with the human’s screen name
