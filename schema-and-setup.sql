@@ -8,6 +8,7 @@ CREATE USER social_user@localhost IDENTIFIED WITH mysql_native_password BY 'soci
 GRANT ALL PRIVILEGES ON social.* TO social_user@localhost;
 
 use social;
+
 DROP TABLE IF EXISTS guest;
 
 CREATE TABLE guest (

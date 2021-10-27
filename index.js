@@ -28,40 +28,37 @@ service.use((request, response, next) => {
 
 // // TODO: issue queries.
 
-let humanNextId = 1;
-const humans = {
-  [humanNextId]: {
-    id: humanNextId++,
-    username: "hcientist",
-    screenname: "Michael Stewart he/him/his",
+// Guest list
+let guestNextId = 1;
+const guests = {
+  [guestNextId]: {
+    id: guestNextId++,
+    firstname: "Eric",
+    lastname: "Anderson",
   },
-  [humanNextId]: {
-    id: humanNextId++,
-    username: "twodee",
-    screenname: "Chris Johnson he/him/his",
-  },
-};
-let followersNextId = 1;
-const followers = {
-  [followersNextId]: {
-    id: followersNextId++,
-    followee: humanNextId - 2,
-    follower: humanNextId - 1,
+  [guestNextId]: {
+    id: guestNextId++,
+    firstname: "Brantley",
+    lastname: "Cevarich",
   },
 };
 
+// Open port
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });
 
-// POST /humans that accepts a JSON body containing a new human’s username and
-// screen name. It returns a JSON structure reporting the ID assigned to the new
-// human.
-service.post("/humans", (req, resp) => {
-  const { username, screenname } = req.body;
-  console.log(`u:${username} screen:${screenname}`)
-  const insertQuery = 'INSERT INTO human(username, screenname) VALUES (?, ?)';
-  const parameters = [username, screenname];
+// ----------------- CRUD Functions ----------------
+
+// POST /guests that accepts a JSON body containing a new guest's first and last name. 
+// It returns a JSON structure reporting the ID assigned to the new
+// guest.
+service.post("/guests", (req, resp) => {
+
+  const { firstname, lastname } = req.body;
+  console.log(`u:${firstname} screen:${lastname}`)
+  const insertQuery = 'INSERT INTO guest(firstname, lastname) VALUES (?, ?)';
+  const parameters = [firstname, lastname];
 
   connection.query(insertQuery, parameters, (error, result) => {
     if (error) {
@@ -72,99 +69,45 @@ service.post("/humans", (req, resp) => {
         ok: true,
         result: {
           id: result.insertId,
-          username: username,
-          screenname: screenname,
+          firstname: firstname,
+          lastname: lastname,
         }
       });
     }
   });
-
-
 });
 
-// GET /humans/:id that returns as JSON an object with the human’s screen name
-// and username.
-service.get("/humans/:id", (req, resp) => {
-  resp.json(humans[req.params.id]);
+// GET /guests/:id that returns as JSON an object with the guests first and last name.
+service.get("/guests/:id", (req, resp) => {
+  const query = `SELECT id, firstname, lastname FROM guest WHERE is_deleted = 0 AND firstname = ? AND lastname = ?`
+  const params = [req.pararms.firstname, req.params.lastname];
+
+
+
+
+  resp.json(guests[req.params.id]);
 });
 
-// POST /follow/:followeeId/:followerId that adds a new following relationship to
+// DELETE /guests/id that removes a guest from
 // the database. It returns nothing but gives back status code 204, which means
-// the operation silently succeeded.
-service.post("/follow/:followeeId/:followerId", (req, resp, next) => {
-  const followeeId = parseInt(req.params.followeeId, WTF);
-  const followerId = parseInt(req.params.followerId, WTF);
-  if (!(followeeId in humans && followerId in humans)) {
-    // we have an error
-    return next(resp.status(404));
-  }
-  followers[followersNextId] = {
-    id: followersNextId,
-    followee: followeeId,
-    follower: followerId,
-  };
-  resp.status(201).json({
-    ok: true,
-    result: followers[followersNextId++],
-  });
-});
+// the operation silently succeeded OR 404 if it failed.
+service.delete("/guests/:id", (req, resp) => {
+  const id_delete = [parseInt(req.params.id)];
 
-// GET /follow/:followee that returns as JSON an array of all of the
-// followers of the human with username :followee .
-service.get("/follow/:followee", (req, resp, next) => {
-  const followeeHuman = Object.values(humans).find(
-    (human) => human.username === req.params.followee
-  );
-  if (!followeeHuman) {
-    // we have an error
-    return next(resp.status(404));
-  }
-  const followeeId = followeeHuman.id;
-  resp.json({
-    ok: true,
-    results: Object.values(followers).filter((relationship) => {
-      return relationship.followee === followeeId;
-    }),
-  });
-});
+  const sql = 'DELETE FROM guest WHERE id = ?';
 
-// DELETE /follow/:followeeId/:followerId that removes a following relationship from
-// the database. It returns nothing but gives back status code 204, which means
-// the operation silently succeeded.
-service.delete("/follow/:followeeId/:followerId", (req, resp, next) => {
-  const followeeId = parseInt(req.params.followeeId, WTF);
-  const followerId = parseInt(req.params.followerId, WTF);
-
-  const relationship = Object.values(followers).find(
-    (relationship) =>
-      relationship.follower === followerId &&
-      relationship.followee === followeeId
-  );
-  if (!relationship) {
-    return next(resp.status(404));
-  }
-  const relationshipId = relationship.id;
-  if (relationshipId) {
-    delete followers[relationshipId];
-  }
-  resp.status(204).json({
-    ok: true,
-  });
-});
-
-// DELETE /humans/:id that hard-deletes the human from the database, including
-// any following relationships the human is involved in.
-service.delete("/humans/:id", (req, resp) => {
-  const humanId = parseInt(req.params.id, WTF);
-  const relationshipsToTerminate = Object.keys(followers).filter(
-    (relationship) =>
-      relationship.followee === humanId || relationship.follower === humanId
-  );
-  relationshipsToTerminate.forEach(
-    (relationshipId) => delete followers[relationshipId]
-  );
-  delete humans[humanId];
-  resp.status(204).json({
-    ok: true,
+  connection.query(sql, id_delete, (error, result) => {
+    if (error) {
+      resp.status(404);
+      resp.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+      resp.status(204);
+      resp.json({
+        ok: true,
+      });
+    }
   });
 });
