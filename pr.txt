@@ -1,0 +1,59 @@
+1. Were you able to reach their endpoint on the web?
+
+So I am sure I would be able to, but there is nothing on your report.html to show meyour domain name. I see the  readme.md and the 
+acrud operations. Which they all look good!
+    
+    1. can you successfully make requests and receive responses from all of their endpoints?
+    Not at the moment, whcih maybe this is on my side, but just need the domain name to your web service.
+
+2. What did you like about this service?
+
+Just from the code side I like the idea of the web service. I do think that this is sort of similar to the social lab, and maybe you asked
+Dr. Stewart. I like the hard delete over the soft delete.
+
+3. What do you think about the paths that have been chosen?
+
+All the paths make sense, othing is throwing me off. LIke I stated earlier I like the curl command for hard delete.
+
+    1. Are they consistent? is there any possible point of confusion?
+
+    No confusion.
+
+4. What do you like about the structure of the responses from the different endpoints?
+
+I do like the HTTP codes if something wromg does occur.
+
+5. Describe one significant difference between your own P2 seervice and this person's. E.g.
+
+The big difference right off the bat is the differnece between soft and hard delete. I wish that I wouldve implemented a hard delete. The 
+other differnece is having several gets. I wanted the user to get a specific movie title and then also get all movies.
+
+    1. Which might be easier to build a front end for (and why)?
+
+    As of right now yours is simpler and cleaner so yours would be easier.
+
+    2. Which codebase do you think would be more maintainable (and why)?
+
+    Yours because each crud has only one response.
+
+6. Is the code well-structured?
+
+Yes the code is very well structured.
+
+    1. if not, suggest some specific improvements
+
+    None.
+
+7. Did you find any other issues? If so, briefly enumerate them.
+
+    Just the posting of your web server by the doamin name.
+
+8. Do you have any other constructive comments for the author?
+
+    1. might they want to consider adding any endpoint(s) to better facilitate a particular front end feature you're imagining?
+
+    I would add several more endpoints, especially for get.
+
+    2. might they be able to include more or less of the data in the response to an endpoint and better support the front end?
+
+    I might add more than two attributes for the sql. Like number or email, just something related to the person.
