@@ -94,6 +94,7 @@ service.get("/guests/:id", (req, resp) => {
   connection.query(sql, id_get, (error, rows) => {
     //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
     if (error) {
+      console.error(error);
       resp.status(404);
       resp.json({
         ok: false,
