@@ -92,10 +92,15 @@ service.get("/guests/:id", (req, resp) => {
   console.log(`Got:${id_get}`)
 
   connection.query(sql, id_get, (error, rows) => {
-    resp.json({
-      ok: true,
-      guests: rows.map(rowToObject),
-    });
+    //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
+    if (error) {
+      console.error(error);
+    } else {
+      resp.json({
+        ok: true,
+        guests: rows.map(rowToObject),
+      });
+    }
   });
 });
 
@@ -106,7 +111,7 @@ service.delete("/guests/:id", (req, resp) => {
   const id_delete = [parseInt(req.params.id)];
 
   const sql = 'DELETE FROM guest WHERE id = ?';
-  console.log(`Deleted:${id}`)
+  console.log(`Deleted:${id_delete}`)
 
   connection.query(sql, id_delete, (error, result) => {
     if (error) {
