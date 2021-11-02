@@ -92,10 +92,18 @@ service.get("/guests/:id", (req, resp) => {
   console.log(`Got:${id_get}`)
 
   connection.query(sql, id_get, (error, rows) => {
-    resp.json({
-      ok: true,
-      guests: rows.map(rowToObject),
-    });
+    //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
+    if (error) {
+      resp.status(404);
+      resp.json({
+        ok: false,
+      });
+    } else {
+      resp.json({
+        ok: true,
+        guests: rows.map(rowToObject),
+      });
+    }
   });
 });
 
