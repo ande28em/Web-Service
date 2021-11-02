@@ -88,8 +88,7 @@ function rowToObject(row) {
 // GET /guests/:id that returns as JSON an object with the guests first and last name.
 service.get("/get/:id", (req, resp) => {
   const id_get = [parseInt(req.params.id)];
-  const sql = 'SELECT * FROM guest WHERE id = ?';
-  console.log(`Got:${id_get}`)
+  const sql = "SELECT * FROM guest WHERE id = ?";
 
   connection.query(sql, id_get, (error, rows) => {
     //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
@@ -100,9 +99,10 @@ service.get("/get/:id", (req, resp) => {
         results: error.message,
       });
     } else {
+      const guest = rows.map(rowToObject);
       resp.json({
         ok: true,
-        guests: rows.map(rowToObject),
+        results: rows.map(rowToObject),
       });
     }
   });
