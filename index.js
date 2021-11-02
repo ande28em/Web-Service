@@ -85,8 +85,8 @@ function rowToObject(row) {
   };
 }
 
-// GET /guests/:id that returns as JSON an object with the guests first and last name.
-service.get("/guests/:id", (req, resp) => {
+// GET /get/:id that returns as JSON an object with the guests first and last name.
+service.get("/get/:id", (req, resp) => {
   const id_get = [parseInt(req.params.id)];
   const sql = 'SELECT * FROM guest WHERE id = ?';
   console.log(`Got:${id_get}`)
@@ -94,10 +94,10 @@ service.get("/guests/:id", (req, resp) => {
   connection.query(sql, id_get, (error, rows) => {
     //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
     if (error) {
-      console.error(error);
-      resp.status(404);
+      resp.status(500);
       resp.json({
         ok: false,
+        results: error.message,
       });
     } else {
       resp.json({
