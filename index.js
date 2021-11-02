@@ -79,7 +79,7 @@ service.post("/guests", (req, resp) => {
 
 function rowToObject(row) {
   return {
-    // id: row.id,
+    id: row.id,
     firstName: row.firstname,
     lastName: row.lastname
   };
