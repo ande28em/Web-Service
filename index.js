@@ -85,7 +85,7 @@ function rowToObject(row) {
   };
 }
 
-// GET /guests/:id that returns as JSON an object with the guests first and last name.
+// GET /get/:id that returns as JSON an object with the guests first and last name.
 service.get("/get/:id", (req, resp) => {
   const id_get = [parseInt(req.params.id)];
   const sql = "SELECT * FROM guest WHERE id = ?";
