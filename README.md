@@ -7,8 +7,8 @@ https://project2.emanderson.me:8443/
    --data '{"firstname": "Eric", "lastname": "Anderson"}' \
    http://localhost:5000/guests</pre>
    </li></ul>
-1. GET /guests/:id that returns as JSON an object with the guest’s first and last name.
-   - `curl -v http://localhost:5000/guests/1`
+1. GET /get/:id that returns as JSON an object with the guest’s first and last name.
+   - `curl -v http://localhost:5000/get/1`
 1. DELETE /guests/:id that hard-deletes the guest from the database.<ul><li>
      <pre>curl -v \
    --request DELETE \
