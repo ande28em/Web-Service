@@ -5,7 +5,7 @@ https://project2.emanderson.me:8443/
    --request POST \
    --header 'Content-Type: application/json' \
    --data '{"firstname": "Eric", "lastname": "Anderson"}' \
-   https://project2.emanderson.me/guests</pre>
+   https://project2.emanderson.me:8443/guests</pre>
    </li></ul>
 1. GET /get/:id that returns as JSON an object with the guest’s first and last name.
    - `curl -v http://localhost:5000/get/1`
