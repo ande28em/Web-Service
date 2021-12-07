@@ -108,6 +108,28 @@ service.get("/get/:id", (req, resp) => {
   });
 });
 
+// GET /get that returns as JSON an object with ALL guests first and last name.
+service.get("/get/", (req, resp) => {
+  const id_get = [parseInt(req.params.id)];
+  const sql = "SELECT * FROM guest";
+
+  connection.query(sql, id_get, (error, rows) => {
+    if (error) {
+      resp.status(500);
+      resp.json({
+        ok: false,
+        results: error.message,
+      });
+    } else {
+      const guest = rows.map(rowToObject);
+      resp.json({
+        ok: true,
+        results: rows.map(rowToObject),
+      });
+    }
+  });
+});
+
 // DELETE /guests/id that removes a guest from
 // the database. It returns nothing but gives back status code 204, which means
 // the operation silently succeeded OR 404 if it failed.
