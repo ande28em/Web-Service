@@ -109,11 +109,10 @@ service.get("/get/:id", (req, resp) => {
 });
 
 // GET /get that returns as JSON an object with ALL guests first and last name.
-service.get("/get/", (req, resp) => {
-  const id_get = [parseInt(req.params.id)];
+service.get("/get", (resp) => {
   const sql = "SELECT * FROM guest";
 
-  connection.query(sql, id_get, (error, rows) => {
+  connection.query(sql, (error, rows) => {
     if (error) {
       resp.status(500);
       resp.json({
