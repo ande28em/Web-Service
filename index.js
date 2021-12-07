@@ -91,7 +91,7 @@ service.get("/get/:id", (req, resp) => {
   const sql = "SELECT * FROM guest WHERE id = ?";
 
   connection.query(sql, id_get, (error, rows) => {
-    //resp.sendFile('/Users/brantleycervarich/Desktop/PROJECT2CS347/report.html'); // -=-=-=-=-=-=ENSURE=-=-=-=-=-=-
+    resp.sendFile('report.html');
     if (error) {
       resp.status(500);
       resp.json({
