@@ -2,129 +2,121 @@ const express = require("express");
 const service = express();
 service.use(express.json());
 const port = 5000;
-const WTF = 10; // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt#description
-
 const fs = require("fs");
 const mysql = require("mysql");
-
-// Parse credentials
 const json = fs.readFileSync("credentials.json", "utf8");
 const credentials = JSON.parse(json);
-
-// Connect with database
 const connection = mysql.createConnection(credentials);
+
 connection.connect((error) => {
   if (error) {
     console.error(error);
     process.exit(1);
   }
 });
-
-// Cross origin requirement
-service.use((request, response, next) => {
-  response.set('Access-Control-Allow-Origin', '*');
-  next();
+const selectQuery = 'SELECT * FROM guest';
+connection.query(selectQuery, (error, rows) => {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log(rows);
+  }
 });
-
-// // TODO: issue queries.
-
-// Guest list
-let guestNextId = 1;
-const guests = {
-  [guestNextId]: {
-    id: guestNextId++,
-    firstname: "Eric",
-    lastname: "Anderson",
-  },
-  [guestNextId]: {
-    id: guestNextId++,
-    firstname: "Brantley",
-    lastname: "Cevarich",
-  },
-};
-
-// Open port
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
 });
 
-// ----------------- CRUD Functions ----------------
+//-----------------------------------------------------
 
-// POST /guests that accepts a JSON body containing a new guest's first and last name. 
-// It returns a JSON structure reporting the ID assigned to the new
-// guest.
-service.post("/guests", (req, resp) => {
+// GETs all guests
+service.get('/guests', (request, response) => {
+  const parameters = [
+    request.params
+  ];
 
-  const { firstname, lastname } = req.body;
-  console.log(`Added First:${firstname} Last:${lastname}`)
-  const insertQuery = 'INSERT INTO guest(firstname, lastname) VALUES (?, ?)';
-  const parameters = [firstname, lastname];
-
-  connection.query(insertQuery, parameters, (error, result) => {
+  const query = 'SELECT * FROM guest ORDER BY id';
+  connection.query(query, parameters, (error, rows) => {
     if (error) {
-      console.error(error);
-    } else {
-      console.log(result);
-      resp.json({
-        ok: true,
-        result: {
-          id: result.insertId,
-          firstname: firstname,
-          lastname: lastname,
-        }
+      response.status(500);
+      response.json({
+        ok: false,
+        result: error.message,
       });
+    } else {
+      response.json({
+        ok: true,
+        result: rows.map(rowToObject),
+      });
+      console.log(response);
     }
   });
 });
 
-function rowToObject(row) {
-  return {
-    id: row.id,
-    firstName: row.firstname,
-    lastName: row.lastname
-  };
-}
+// GETs guest by id number
+service.get('/guests/:id', (request, response) => {
 
-// GET /get/:id that returns as JSON an object with the guests first and last name.
-service.get("/get/:id", (req, resp) => {
-  const id_get = [parseInt(req.params.id)];
-  const sql = "SELECT * FROM guest WHERE id = ?";
-
-  connection.query(sql, id_get, (error, rows) => {
-    resp.sendFile('report.html');
+  const query = 'SELECT * FROM guest WHERE id = ?';
+  const id_get = [parseInt(request.params.id)];
+  connection.query(query, id_get, (error, rows) => {
     if (error) {
-      resp.status(500);
-      resp.json({
+      response.status(500);
+      response.json({
         ok: false,
-        results: error.message,
+        result: error.message,
       });
     } else {
       const guest = rows.map(rowToObject);
-      resp.json({
+      response.json({
         ok: true,
-        results: rows.map(rowToObject),
+        result: rows.map(rowToObject),
       });
+      console.log(response);
     }
   });
 });
 
-// GET /get that returns as JSON an object with ALL guests first and last name.
-service.get("/get", (resp) => {
-  const sql = "SELECT * FROM guest";
+// GETs guest by lastname
+service.get('/searchLast/:lastname', (request, response) => {
 
-  connection.query(sql, (error, rows) => {
+  const query = 'SELECT * FROM guest WHERE lastname = ?';
+  const name_get = request.params.lastname;
+  connection.query(query, name_get, (error, rows) => {
     if (error) {
-      resp.status(500);
-      resp.json({
+      response.status(500);
+      response.json({
         ok: false,
-        results: error.message,
+        result: error.message,
       });
     } else {
       const guest = rows.map(rowToObject);
-      resp.json({
+      response.json({
         ok: true,
-        results: rows.map(rowToObject),
+        result: rows.map(rowToObject),
       });
+      console.log(response);
+    }
+  });
+});
+
+// GETs guest by firstname
+service.get('/searchFirst/:firstname', (request, response) => {
+
+  const query = 'SELECT * FROM guest WHERE firstname = ?';
+  const name_get = request.params.firstname;
+  connection.query(query, name_get, (error, rows) => {
+    if (error) {
+      response.status(500);
+      response.json({
+        ok: false,
+        result: error.message,
+      });
+    } else {
+      const guest = rows.map(rowToObject);
+      response.json({
+        ok: true,
+        result: rows.map(rowToObject),
+      });
+      console.log(response);
     }
   });
 });
@@ -134,10 +126,8 @@ service.get("/get", (resp) => {
 // the operation silently succeeded OR 404 if it failed.
 service.delete("/guests/:id", (req, resp) => {
   const id_delete = [parseInt(req.params.id)];
-
   const sql = 'DELETE FROM guest WHERE id = ?';
   console.log(`Deleted:${id_delete}`)
-
   connection.query(sql, id_delete, (error, result) => {
     if (error) {
       resp.status(404);
@@ -153,7 +143,6 @@ service.delete("/guests/:id", (req, resp) => {
     }
   });
 });
-
 // PATCH /guests that accepts a JSON body containing an id and that guest's 
 // new first and last name. It returns a JSON structure reporting the new info 
 // assigned to the guest.
@@ -178,3 +167,12 @@ service.patch("/guests/:id/:firstname/:lastname", (req, resp) => {
     }
   });
 });
+
+
+function rowToObject(row) {
+  return {
+    id: row.id,
+    firstName: row.firstname,
+    lastName: row.lastname
+  };
+}

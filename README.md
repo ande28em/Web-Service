@@ -4,13 +4,15 @@ https://project2.emanderson.me:8443/
    <pre>curl -v \
    --request POST \
    --header 'Content-Type: application/json' \
-   --data '{"firstname": "Eric", "lastname": "Anderson"}' \
+   --data '{"firstName": "Eric", "lastName": "Anderson"}' \
    https://project2.emanderson.me:8443/guests</pre>
    </li></ul>
-1. GET /get/:id that returns as JSON an object with the guest’s first and last name.
-   - `curl -v http://localhost:5000/get/1`
-1. GET /get/ that returns as JSON an object with ALL guest’s first and last name.
-   - `curl -v http://localhost:5000/get/`
+1. GET /guests/:id that returns as JSON an object with the guest’s first and last name.
+   - `curl -v http://localhost:5000/guests/1`
+   - `curl -v https://project2.emanderson.me:8443/guests/1`
+1. GET /guests/ that returns as JSON an object with ALL guest’s first and last name.
+   - `curl -v http://localhost:5000/guests/1`
+   - `curl -v https://project2.emanderson.me:8443/guests/1`
 1. DELETE /guests/:id that hard-deletes the guest from the database.<ul><li>
      <pre>curl -v \
    --request DELETE \
@@ -19,3 +21,11 @@ https://project2.emanderson.me:8443/
     <pre>curl -v \
    --request PATCH \
    http://localhost:5000/guests/2/Eric/Anderson</pre></li></ul>
+1. SEARCH /searchFirst/:firstName/ searches for matching first names. 
+   <pre>curl -v \
+   --request PATCH \
+   http://localhost:5000/searchFirst/Eric</pre></li></ul>
+1. SEARCH /searchLast/:lastName/ searches for matching last names.
+   <pre>curl -v \
+   --request PATCH \
+   http://localhost:5000/searchFirst/Eric</pre></li></ul>
