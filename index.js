@@ -15,11 +15,7 @@ connection.connect((error) => {
   }
 });
 
-// Cross origin requirement
-service.use((request, response, next) => {
-  response.set('Access-Control-Allow-Origin', '*');
-  next();
-});
+
 
 const selectQuery = 'SELECT * FROM guest';
 connection.query(selectQuery, (error, rows) => {
@@ -31,6 +27,12 @@ connection.query(selectQuery, (error, rows) => {
 });
 service.listen(port, () => {
   console.log(`We're live on port ${port}!`);
+});
+
+// Cross origin requirement
+service.use((request, response, next) => {
+  response.set('Access-Control-Allow-Origin', '*');
+  next();
 });
 
 //-----------------------------------------------------
@@ -131,20 +133,20 @@ service.get('/searchFirst/:firstname', (request, response) => {
 // DELETE /guests/id that removes a guest from
 // the database. It returns nothing but gives back status code 204, which means
 // the operation silently succeeded OR 404 if it failed.
-service.delete("/guests/:id", (req, resp) => {
-  const id_delete = [parseInt(req.params.id)];
+service.delete("/guests/:id", (request, response) => {
+  const id_delete = [parseInt(request.params.id)];
   const sql = 'DELETE FROM guest WHERE id = ?';
   console.log(`Deleted:${id_delete}`)
   connection.query(sql, id_delete, (error, result) => {
     if (error) {
-      resp.status(404);
-      resp.json({
+      response.status(404);
+      response.json({
         ok: false,
         results: error.message,
       });
     } else {
-      resp.status(204);
-      resp.json({
+      response.status(204);
+      response.json({
         ok: true,
       });
     }
@@ -153,17 +155,17 @@ service.delete("/guests/:id", (req, resp) => {
 // PATCH /guests that accepts a JSON body containing an id and that guest's 
 // new first and last name. It returns a JSON structure reporting the new info 
 // assigned to the guest.
-service.patch("/guests/:id/:firstname/:lastname", (req, resp) => {
-  const id_update = [parseInt(req.params.id)];
-  const firstname_update = req.params.firstname;
-  const lastname_update = req.params.lastname;
+service.patch("/guests/:id/:firstname/:lastname", (request, response) => {
+  const id_update = [parseInt(request.params.id)];
+  const firstname_update = request.params.firstname;
+  const lastname_update = request.params.lastname;
   const updateQuery = 'UPDATE guest SET firstname = ?, lastname = ? WHERE id = ?';
   const param = [firstname_update, lastname_update, id_update];
   connection.query(updateQuery, param, (error, result) => {
     if(error){
       console.error(error);
     } else {
-      resp.json({
+      response.json({
         ok: true,
         result: {
           id: id_update,
@@ -178,8 +180,8 @@ service.patch("/guests/:id/:firstname/:lastname", (req, resp) => {
 // POST /guests that accepts a JSON body containing a new guest's first and last name. 
 // It returns a JSON structure reporting the ID assigned to the new
 // guest.
-service.post("/guests", (req, resp) => {
-  const { firstname, lastname } = req.body;
+service.post("/guests", (request, response) => {
+  const { firstname, lastname } = request.body;
   console.log(`Added First:${firstname} Last:${lastname}`)
   const insertQuery = 'INSERT INTO guest(firstname, lastname) VALUES (?, ?)';
   const parameters = [firstname, lastname];
@@ -188,7 +190,7 @@ service.post("/guests", (req, resp) => {
       console.error(error);
     } else {
       console.log(result);
-      resp.json({
+      response.json({
         ok: true,
         result: {
           id: result.insertId,
