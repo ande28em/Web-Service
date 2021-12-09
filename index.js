@@ -14,6 +14,13 @@ connection.connect((error) => {
     process.exit(1);
   }
 });
+
+// Cross origin requirement
+service.use((request, response, next) => {
+  response.set('Access-Control-Allow-Origin', '*');
+  next();
+});
+
 const selectQuery = 'SELECT * FROM guest';
 connection.query(selectQuery, (error, rows) => {
   if (error) {
@@ -167,6 +174,32 @@ service.patch("/guests/:id/:firstname/:lastname", (req, resp) => {
     }
   });
 });
+
+// POST /guests that accepts a JSON body containing a new guest's first and last name. 
+// It returns a JSON structure reporting the ID assigned to the new
+// guest.
+service.post("/guests", (req, resp) => {
+  const { firstname, lastname } = req.body;
+  console.log(`Added First:${firstname} Last:${lastname}`)
+  const insertQuery = 'INSERT INTO guest(firstname, lastname) VALUES (?, ?)';
+  const parameters = [firstname, lastname];
+  connection.query(insertQuery, parameters, (error, result) => {
+    if (error) {
+      console.error(error);
+    } else {
+      console.log(result);
+      resp.json({
+        ok: true,
+        result: {
+          id: result.insertId,
+          firstname: firstname,
+          lastname: lastname,
+        }
+      });
+    }
+  });
+});
+
 
 
 function rowToObject(row) {
