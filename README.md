@@ -4,7 +4,7 @@ https://project2.emanderson.me:8443/
    <pre>curl -v \
    --request POST \
    --header 'Content-Type: application/json' \
-   --data '{"firstName": "Eric", "lastName": "Anderson"}' \
+   --data '{"firstname": "Brantley", "lastname": "C"}' \
    https://project2.emanderson.me:8443/guests</pre>
    </li></ul>
 1. GET /guests/:id that returns as JSON an object with the guest’s first and last name.
