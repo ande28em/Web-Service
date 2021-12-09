@@ -16,11 +16,11 @@ https://project2.emanderson.me:8443/
 1. DELETE /guests/:id that hard-deletes the guest from the database.<ul><li>
      <pre>curl -v \
    --request DELETE \
-   http://localhost:5000/guests/2</pre></li></ul>
+   https://project2.emanderson.me:8443/guests/2</pre></li></ul>
 1. PATCH /guests/:id/:firstname/:lastname updates the guests first and last name.<ul><li>
     <pre>curl -v \
    --request PATCH \
-   http://localhost:5000/guests/2/Eric/Anderson</pre></li></ul>
+   https://project2.emanderson.me:8443/2/Eric/Anderson</pre></li></ul>
 1. SEARCH /searchFirst/:firstName/ searches for matching first names. 
    - `curl -v http://localhost:5000/searchFirst/Eric`
    - `curl -v https://project2.emanderson.me:8443/searchFirst/Eric`
