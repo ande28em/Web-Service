@@ -21,9 +21,9 @@ https://project2.emanderson.me:8443/
     <pre>curl -v \
    --request PATCH \
    https://project2.emanderson.me:8443/2/Eric/Anderson</pre></li></ul>
-1. /searchFirst/:firstName/ searches for matching first names. 
+1. GET /searchFirst/:firstName/ searches for matching first names. 
    - `curl -v http://localhost:5000/searchFirst/Eric`
    - `curl -v https://project2.emanderson.me:8443/searchFirst/Eric`
-1. /searchLast/:lastName/ searches for matching last names.
+1. GET /searchLast/:lastName/ searches for matching last names.
    - `curl -v http://localhost:5000/searchLast/Eric`
    - `curl -v https://project2.emanderson.me:8443/searchLast/Eric`
