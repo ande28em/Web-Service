@@ -1,4 +1,4 @@
-https://project2.emanderson.me:8443/
+https://project2.emanderson.me:8443/guests
 
 1. POST /guests that accepts a JSON body containing a new guest's first and last name. It returns a JSON structure reporting the ID assigned to the new guest.<ul><li>
    <pre>curl -v \
